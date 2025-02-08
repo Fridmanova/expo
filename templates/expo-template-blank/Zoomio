@@ -1,0 +1,101 @@
+import React, { useState } from "react";
+import { View, Text, TextInput, FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { LinearGradient } from "react-native-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+
+const cars = [
+  {
+    id: "1",
+    brand: "Tesla",
+    model: "Model 3",
+    price: "40 000 €",
+    fuel: "Elektro",
+    power: "283 HP",
+    image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Tesla_Model_3_parked%2C_front_driver_side.jpg",
+  },
+  {
+    id: "2",
+    brand: "BMW",
+    model: "M3",
+    price: "70 000 €",
+    fuel: "Benzín",
+    power: "503 HP",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/BMW_M3_G80_IMG_4468.jpg",
+  },
+  {
+    id: "3",
+    brand: "Audi",
+    model: "A4",
+    price: "45 000 €",
+    fuel: "Diesel",
+    power: "261 HP",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9b/2017_Audi_A4_TDI_S_Line_2.0_Front.jpg",
+  },
+];
+
+export default function App() {
+  const [search, setSearch] = useState("");
+
+  const filteredCars = cars.filter(car =>
+    car.brand.toLowerCase().includes(search.toLowerCase()) ||
+    car.model.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <LinearGradient colors={["#000000", "#D90368"]} style={styles.container}>
+      <View style={styles.header}>
+        <Ionicons name="car-sport-outline" size={32} color="white" />
+        <Text style={styles.title}>Zoomio</Text>
+      </View>
+
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Vyhľadaj auto..."
+        placeholderTextColor="#aaa"
+        value={search}
+        onChangeText={setSearch}
+      />
+
+      <FlatList
+        data={filteredCars}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.card}>
+            <Image source={{ uri: item.image }} style={styles.image} />
+            <View style={styles.info}>
+              <Text style={styles.carTitle}>{item.brand} {item.model}</Text>
+              <Text style={styles.price}>{item.price}</Text>
+              <Text style={styles.details}>{item.fuel} • {item.power}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  header: { flexDirection: "row", alignItems: "center", marginBottom: 20 },
+  title: { color: "white", fontSize: 24, fontWeight: "bold", marginLeft: 10 },
+  searchBar: {
+    backgroundColor: "#222",
+    color: "white",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+  },
+  card: {
+    backgroundColor: "#111",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  image: { width: 100, height: 60, borderRadius: 8 },
+  info: { marginLeft: 15 },
+  carTitle: { color: "white", fontSize: 18, fontWeight: "bold" },
+  price: { color: "#D90368", fontSize: 16, marginTop: 5 },
+  details: { color: "#aaa", fontSize: 14, marginTop: 3 },
+});
